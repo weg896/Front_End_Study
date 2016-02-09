@@ -1,0 +1,6 @@
+body {margin:0;}
+#Screen {border:2px solid gray;}
+#Menu {position:absolute; top:0; left:0; width:288px; height:480px; text-align:center; background:black; color:white;}
+#Paused {position:absolute; top:0; left:0; width:288px; height:480px; text-align:center; background:black; color:white;}
+#GameOver {position:absolute; top:0; left:0; width:288px; height:480px; text-align:center; background:black; color:white;}
+.cell {float:left; width:24px; height:24px; background:black;}
