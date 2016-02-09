@@ -1,6 +1,17 @@
+/* Reference :https://www.youtube.com/watch?v=uj7GztZs6nY       */
+/*            http://jsfiddle.net/gregsidelnikov/q72d57cy/38/   */
+/*            http://jsfiddle.net/gregsidelnikov/f3ew7cpd/1/    */
+
+
 body {margin:0;}
 #Screen {border:2px solid gray;}
 #Menu {position:absolute; top:0; left:0; width:288px; height:480px; text-align:center; background:black; color:white;}
 #Paused {position:absolute; top:0; left:0; width:288px; height:480px; text-align:center; background:black; color:white;}
 #GameOver {position:absolute; top:0; left:0; width:288px; height:480px; text-align:center; background:black; color:white;}
 .cell {float:left; width:24px; height:24px; background:black;}
+.cell-white {float:left; width:24px; height:24px; background:white;}
+.cell-red {float:left; width:24px; height:24px; background:red;}
+.cell-blue {float:left; width:24px; height:24px; background:blue;}
+.cell-orange {float:left; width:24px; height:24px; background:orange;}
+.cell-yellow {float:left; width:24px; height:24px; background:yellow;}
+.cell-green {float:left; width:24px; height:24px; background:green;}
