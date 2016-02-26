@@ -1,5 +1,5 @@
 /*
-	Theme Name:	Learning Wordpress Theme Name
+	Theme Name:	Learning Word Press
 	Author: Jerry Author
 	Author URI: http://www.google.ca
 	Version: 9.99
@@ -180,6 +180,9 @@ div.info-box p{
 	color:#333;
 	cursor: default;
 }
+.post{
+	margin:5px;
+}
 
 .post h1{
 	margin-bottom: 0;
@@ -228,4 +231,69 @@ div.hd-search #searchsubmit{
 div.hd-search #s{
 	vertical-align:top;
 	padding: 3px 0;
+}
+
+article.post-aside,
+article.post-link{
+	font-size:125%;
+	background-color:#fff5CB;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 3px 3px 3px rgba(0,0,0,0.1);
+	
+}
+.mini-meta{
+	font-size:68%;
+	margin:0;
+	color: #777;
+}
+
+article.post-link{
+	background-color:#e0ebff;
+	padding:0;
+}
+
+article.post-link a{
+	display: block;
+	padding:20px;
+}
+article.post-gallery{
+	background-color:#222;
+	color:#fff;
+	padding:20px;
+}
+
+article.post-gallery h2{
+	text-align:center;
+}
+article.post-gallery img{
+	border: none!important;
+}
+
+.main-column{
+	width:66%;
+	float:left
+}
+.secondary-column{
+	width:30%;
+	float:right;
+}
+.footer-widgets-area{
+	width:25%;
+	float:left;
+	padding-right:40px;
+	box-sizing:border-box;
+}
+
+.home-columns{
+	padding-top:30px;
+}
+
+.one-half{
+	width:45%;
+	float:left;
+	margin-right:10%;
+}
+.last{
+	margin-right:0;
 }

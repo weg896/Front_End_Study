@@ -11,7 +11,7 @@ get_header();
 						the_time('F jS, Y g:i a');
 					?> | by <a href="<?php 
 						echo get_author_posts_url(get_the_author_meta("ID")); 
-					?>"><?php the_author(); ?></a> | post in 
+					?>"><?php the_author(); ?></a> | single post in 
 					<?php 
 						$categories = get_the_category();
 						$separator = ", ";
