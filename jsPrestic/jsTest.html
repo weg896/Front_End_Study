@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		button{
+			margin:auto;
+			display:block;
+		}
+		div{
+			color: #fc5478;
+		}
+		div{
+			color: #018478;
+		}
+	</style>
+</head>
+<body>
+	<ul id="js-list"></ul>
+	<button id="js-load" onclick="doBatchAppend()">Load More</button>
+	<div>
+		<span>asdfadf</span>
+	<div>
+	<script>
+def mutl(ls):
+    result = 1
+    for item in ls:
+        result *= item
+    return result
+
+function mutl(ls){
+	var result = 1;
+	foreach item in ls{
+		result *= item;
+	}
+}
+
+def compute(n, step):
+    path = []
+    cursum = 0
+    for index in range(step, n):
+        if cursum > n:
+            last = path.pop()
+            path.append(path.pop() + n - (cursum - last))
+            break
+        path.append(index)
+        cursum += index
+    return mutl(path)
+
+function compute(n, step){
+	var patch = [];
+	var cursum = 0;
+	for (){
+		if(cursum > n){
+			last = patch.pop();
+			patch.append(pa)
+		}
+	}
+}
+
+
+def my(n):
+    total = []
+    maxvalue = 0
+    for step in range(int(n/2)):
+        item = compute(n, step)
+        total.append(item)
+    maxvalue = max(total)
+    return maxvalue
+
+
+
+n = 15
+result= my(n)
+print(result)
+	</script>
+</body>
+</html>

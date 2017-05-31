@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<script>
+		var y = 10;
+
+		function foo(input){
+			var y = input;
+			console.log("foo(): no this: "+y);
+			(function(){
+				console.log("foo() enclosure, no this: "+y);
+			})()
+		}
+
+		function foo2(input){
+			var y = input;
+			console.log("foo2(), with this: "+this.y);
+			console.log(this === window);
+			(function(){
+				console.log("foo2() enclosure, with this: "+this.y);
+			})()
+		}
+
+		function foo3(input){
+			this.y = input;
+			console.log("foo3(), this.y no this: "+y);
+			(function(){
+				console.log("foo3() enclosure, this.y no this: "+y);
+			})()
+		}
+
+		function foo4(input){
+			this.y = input;
+			console.log(this === window);
+			console.log("foo4(), this.y whit this: "+this.y);
+			(function(){
+				console.log("foo4() enclosure, this.y whit this: "+this.y);
+			})()
+
+		}
+
+		function foobar(){
+			foo(110);
+			foo2(120);
+			foo3(130);
+			foo4(140);
+			console.log(".............")
+		}
+			/*
+			foobar();
+			y=0;
+			foo(2100);
+			foo2(2200);
+			foo3(2300);
+			foo4(2400);
+			y=0;
+		console.log(".............")
+		var obj = new foo(3311);
+		var obj2 = new foo2(3322);
+		var obj3 = new foo3(3333);
+		var obj4 = new foo4(3334);*/
+
+		var tom = function foobar2(){
+			console.log(this === window);
+			(function(para){
+				console.log(this === window);
+				console.log(para === this);
+				console.log(para);
+				(function(para){
+					console.log(this === window);
+					console.log(para === this);
+					console.log(para);
+				})(this)
+			})(this)
+		}
+
+		function MyObj(){
+			this.tom = tom;
+			this.cat = (function(){
+						console.log(this);
+				});
+		}
+
+		var tom2 = new MyObj();
+		tom2.tom(this);
+		tom2.cat();
+	</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+	</style>
+</head>
+<body>
+	<script>
+		/******* scope chain vs prototype chain ***/
+		/** http://stackoverflow.com/questions/27434357/scope-chain-look-up-vs-prototype-look-up-which-is-when */
+		
+		/*function FooOrig(){}
+		FooOrig.prototype.x = "FooOring.prototype.x";
+
+		function foo(){
+			//var x = 20;
+			this.x = 30;
+			this.bar = function(){
+				console.log(x);
+			}
+		}
+
+		Object.prototype.x = "Object.prototype.x";
+
+		foo.prototype = new FooOrig();
+		foo.x = "foo.x";
+
+		var temp = new foo();
+
+		temp.bar();
+
+
+***************************
+http://stackoverflow.com/questions/750486/javascript-closure-inside-loops-simple-practical-example
+		
+		var tom = [];
+		const LENGTH = 3;
+
+		(function(){
+			for(var i = 0; i<LENGTH;i++){
+				tom[i] = function(){
+					console.log(i);	
+				}
+			}
+		})();
+		tom[0]();
+		tom[1]();
+		tom[2]();
+*/
+		
+		
+		var tom=[]
+		const LENGTH = 3;
+
+		(function(){
+			for(let i = 0; i<LENGTH;i++){
+				tom[i] = function(){
+					console.log(i);	
+				}
+			}
+		})();
+		tom[0]();
+		tom[1]();
+		tom[2]();
+/*	https://googlechrome.github.io/samples/classes-es6/*/			
+				
+
+	</script>
+</body>
+</html>

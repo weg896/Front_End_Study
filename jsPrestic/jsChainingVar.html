@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<script>
+		/*
+		var x = 10;
+		
+		(function foo() {
+			var y = 20;
+			(function bar() {
+				var z = 30;
+				// "x" and "y" are "free variables"
+				// and are found in the next (after
+				// bar's activation object) object
+				// of the bar's scope chain
+				console.log(x + y + z);
+			})();
+		})();
+
+		/*****************************/
+		function Foo(y){
+			this.y = y;
+		}
+		 Foo.prototype.y = 10;
+		 Foo.prototype.calculate = function(){
+			 var y = 30
+			 money();
+			 function money(){
+			 	console.log(y);
+			 }
+		 }
+
+		 function Bar(y){
+			 this.y = y;
+		 }
+		 Bar.prototype = Foo.prototype;
+		 Bar.prototype.y = 100;
+		 Bar.prototype.calculate = function(){
+			 //var y=300;
+			 money();
+			 function money(){
+				 console.log(y);
+			 }
+		 }
+		 
+		 b = new Bar();
+		 c = new Bar();
+
+		 b.calculate(30);
+		 c.calculate(40);
+
+	</script>
+</body>
+</html>		

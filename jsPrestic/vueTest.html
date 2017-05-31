@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .background{
+                background-color: #ce5;
+            }
+            .text{
+                color:#23f;
+            }
+            .money{
+                font-size:40px;
+            }
+            .terry{
+                color:aqua;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app-2">
+            <p v-if="seen" v-on:click="style">Now you can see me</p>
+            <p v-else>I am other</p>
+            <input v-model="message" v-once></input>
+            <span v-once>{{message}}</span>
+            <template v-for="(todo, index) in todos">
+                <li>
+                {{todo.text + " - "+index}}
+                </li>
+                <li>123456</li>
+            </template>
+            <todo-item
+                v-for="todo in todos"
+                v-bind:some="todo.text"
+                v-bind:thing="todo.thing"
+                v-bind:style="{color: tColor}"
+            ></todo-item>
+            {{message | capitalize }} <br/>
+            {{reversize}} <br/>
+            {{style()}}
+            <br/>
+            <input v-model="question"></input><br/>
+            <span v-bind:class="classObject">{{ question }}</span><br/>
+            <span v-bind:class="classObject2">{{ question }}</span>
+            <span v-bind:class="[isMoney ? tmoney : tterry]">{{ question }}</span>
+            <deam v-if="type === 'A'" v-bind:type="type"></deam>
+            <deam v-else-if="type === 'B'" v-bind:type="type"></deam>
+            <deam v-else-if="type === 'C'" v-bind:type="type"></deam>
+            <deam v-else v-bind:type="type"></deam>
+            <span v-for="(co, key) in 10">{{co + "-"+key}}<br/></span>
+
+        </div>
+        <div id="todo-list">
+            <input v-model="newTodoText"
+                v-on:keyup.enter="addNewTodo"
+                placeholder="Add a todo">
+            <ul>
+                <li
+                    is='todo-item'
+                    v-for="(todo, index) in todos"
+                    v-bind:key="todo"
+                    v-bind:title="todo"
+                    v-on:remove="todos.splice(index, 1)"
+                >
+                </li>
+            </ul>
+            <li v-for="n in eventNumber">{{ n }}</li>
+            <button v-on:click="counter+=1">add 1</button>
+            <p>{{counter}}</p>
+            <button v-on:click="greet('message',$event)">greet</button>
+            <input v-model="message" placeholder="edit me"></input>
+            <p>{{message}}</p>
+            <textarea v-model="message"></textarea>
+            <input id="jack" type="checkbox" value="jack" v-model="checklist"></input>
+            <label for="jack">jack</label>
+            <input id="jerry" type="checkbox" value="jerry" v-model="checklist"></input>
+            <label for="jerry">jerry</label>
+            <input id="tom" type="checkbox" value="tom" v-model="checklist"></input>
+            <label for="tom">tom</label>
+            <span>{{checklist}}</span><br/><br/>
+            <input type="radio" id="one" value="One" v-model="picked">
+            <label for="one">one</label>
+            <input type="radio" id="two" value="Two" v-model="picked">
+            <label for="two">two</label>
+            <span>{{picked}}</span><br/><br/><br/><br/>
+            <select v-model="selected">
+                <option disabled value="">Please select one</option>
+                <option value="1">A</option>
+                <option value="2">B</option>
+                <option value="3">C</option>
+            </select>
+            {{selected}}
+            <select v-model="selected2" multiple>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+            {{selected2}}
+
+            <select v-model="selected3">
+                <option v-for="option in options" v-bind:value="option.value">
+                    {{option.text}}
+                </option>
+            </select>
+            <span>select:{{selected3}}</span>
+        </div>
+        <table id="self">
+            <tr is="self"></tr>
+        </table>
+
+        <div id="self2">
+            <simplething></simplething>
+            <simplething></simplething>
+            <simplething></simplething>
+        </div>
+        
+        <script src="https://unpkg.com/vue"></script>
+        <script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+        <script>
+
+            Vue.component('todo-item', {
+                props:['some',"thing"],
+                template: '<li>{{some +" "+thing}}</li>'
+            })
+
+            Vue.component('deam',{
+                props:['type'],
+                template:"<p>{{type +' cahar'}}</p>"
+            })
+            var app2=new Vue({
+                el:"#app-2",
+                data:{
+                    todos:[
+                        {text:"hello",thing:"123456"},
+                        {text:"do",thing:"87954"},
+                        {text:"like",thing:"45645841"}
+                    ],
+                    seen:true,
+                    message:"ting",
+                    question:"",
+                    classObject:{
+                        background: true,
+                        text: true
+                    },
+                    tmoney:'money',
+                    tterry:"terry",
+                    isMoney:true,
+                    tColor: '#2cf',
+                    type:'F'
+                },
+                methods:{
+                    style:function(event){return (new Date()) + event},
+                },
+                filters:{
+                    capitalize:function(value){
+                        if(!value) {return ""}
+                        value = value.toString();
+                        return value.charAt(0).toUpperCase() + value.slice(1)
+                    }
+                },
+                computed:{
+                    reversize:function(){
+                        return new Date()
+                        return this.message.split('').reverse().join('');
+                    },
+                    fullname:{
+                        get:function(){},
+                        set:function(){}
+                    },
+                    classObject2:function(){
+                        return {
+                            background: false,
+                            text: true
+                        }
+                    }
+                },
+                watch:{
+                    message:function(val){
+                        console.log(""+val)
+                    },
+                    question:function(value){
+                        if(this.question.length %2 === 0){
+                            this.classObject.text = !this.classObject.text;
+                        }
+                    }
+                },
+                /*
+                created:function(){console.log("created")},
+                mounted:function(){console.log("mounted")},
+                updated:function(){console.log("updated")},
+                destroyed:function(){console.log("destroyed")},
+                */
+            })
+
+            Vue.component('todo-item',{
+                template: `
+                    <li>
+                        {{title}}
+                        <button v-on:click="$emit('remove')">X</button>
+                    </li>
+                `,
+                props:['title']
+            })
+
+            var app3=new Vue({
+                el:'#todo-list',
+                data:{
+                    newTodoText: "",
+                    todos:[
+                        'Do the dishes',
+                        'Take out the trash',
+                        'Mow the lawn'
+                    ],
+                    number:[0,1,2,3,4,5,6,7,8,9],
+                    counter:0,
+                    message:"",
+                    checked:false,
+                    checklist:[],
+                    picked: 'default',
+                    selected:"",
+                    selected2:[],
+                    selected3:"",
+                    options:[
+                        {text:"one",value:"A"},
+                        {text:"two",value:"B"},
+                        {text:"three",value:"C"}
+                    ]
+                },
+                methods:{
+                    addNewTodo:function(){
+                        this.todos.push(this.newTodoText)
+                        this.newTodoText = ''
+                    },
+                    greet:function(message,event){
+                        if(event){
+                            console.log(message, event.target.tagName);
+                        }
+                    }
+                },
+                computed:{
+                    eventNumber:function(){
+                        return this.number.filter(function(number){
+                            return number % 2 ===0
+                        })
+                    }
+                }
+            })
+
+            var app4=new Vue({
+                el:"#self",
+                components:{
+                    'self':{
+                        template: '<tr>A custom component!</tr>'
+                    }
+                }
+            })
+
+            var app5 = new Vue({
+                el:"#self2",
+                components:{
+                    simplething:{
+                        template:'<button v-on:click="count+=1">{{count}}</button>',
+                        data:function(){
+                            return {count:0}
+                        }
+                    },
+                    buttonCounter:{
+                        template:"<button v-on:click='increment'>{{counter}}</button>",
+                        data:function(){
+                            counter:0
+                        }
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

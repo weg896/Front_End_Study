@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<script>
+		function foo(){
+			var x = 10;
+			(function bar(){
+				console.log(x);
+			})();
+		}
+		
+		Object.prototype.x = 20;
+		
+		foo();
+	</script>
+</body>
+</html>		

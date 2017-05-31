@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		#todo-app{
+			width:800px;
+			height:600px;
+		}
+
+	</style>
+</head>
+<body>
+	<table id="todo-app">
+		<tr>
+			<th>Name</th><th>Price</th><th>Quantity</th>
+		</tr>
+		<tr>
+			<td>i5-500</td><td>$120</td><td>5</td>
+		</tr>
+		<tr>
+			<td>A6-400</td><td>$320</td><td>2</td>
+		</tr>
+				<tr>
+			<td>i3-3300</td><td>$150</td><td>10</td>
+		</tr>
+				<tr>
+			<td>i5-6900</td><td>$940</td><td>5</td>
+		</tr>
+	</table>
+	<script>
+		document.addEventListener("DOMContentLoaded", function(){
+			let app = document.getElementById("todo-app");
+
+			app.addEventListener("click",function(e){
+				if(e.target ){
+					let item = e.target;
+					console.log("you click "+item.innerHTML);
+				}
+			});
+		})
+	</script>
+</body>
+</html>

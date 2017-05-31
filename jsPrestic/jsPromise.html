@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		button{
+			margin:auto;
+			display:block;
+		}
+		div{
+			color: #fc5478;
+		}
+		div{
+			color: #018478;
+		}
+	</style>
+</head>
+<body>
+	<ul id="js-list"></ul>
+	<button id="js-load" onclick="doBatchAppend()">Load More</button>
+	<div>
+		<span>asdfadf</span>
+	<div>
+	<script>
+		function stringZip(str){
+			var strArr = str.split("");
+			var tempNum = 1;
+			
+			var pre = strArr[0];
+			var output = "";
+			for(var i=1;i<strArr.length;i++){
+				if(pre == strArr[i]){
+					tempNum++;
+				}else{
+					if(tempNum > 1){
+						output += tempNum + pre;
+					}else{
+						output += pre;
+					}
+					if(i+1 < strArr.length){
+						pre = strArr[i+1];
+						continue
+					}
+					tempNum =1;
+				}
+			}
+			console.log(output);
+		}
+		
+		stringZip("cccddecc");
+		stringZip("ader");
+		stringZip("pppppppp");
+	</script>
+</body>
+</html>

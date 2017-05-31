@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <script>
+        var a = {a:1}
+
+        var b = Object.create(a);
+        console.log(b.a);
+
+        var c = Object.create(b);
+
+        //var d = Object.create(null);
+        console.log(a.a === b.__proto__.a);
+        console.log(b.__proto__);
+
+        console.log(a.hasOwnProperty("a"));
+        console.log(b.hasOwnProperty("a"));
+        console.log(c.hasOwnProperty("a"));
+        //console.log(d.hasOwnProperty("a"));
+
+    </script>
+</body>
+</html>

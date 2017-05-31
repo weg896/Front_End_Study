@@ -1,0 +1,141 @@
+Other tricky examples
+<pre>
+    <code class="js">
+    "use strict";
+	// common case of getting backing another function from a function call
+	function fooOrigin(){
+		return function bar(para){
+			console.log(this === para);
+		}
+	}
+	var objOrigin = {
+		func:{}
+	}
+
+	objOrigin.func = fooOrigin();
+	objOrigin.func(objOrigin); // 'this' points to objOrigin
+
+	///////////////////////////////////////
+	// common case of inner function call
+	function fooOrigin_inner(para){
+		function bar(para){
+			console.log(this === para);
+		}
+		bar(para); // can assume as window/global.bar(para),
+	}
+	fooOrigin_inner(undefined) // window/global
+
+	function fooOrigin_inner2(para){
+		function bar(para){
+			function tim(para){
+				console.log(this === para);
+			}
+			tim(para); can assume as window/global.tim(para),
+		}
+		bar(para);
+	}
+	fooOrigin_inner2(undefined) // window/global
+
+    ///////////////////////////////////////
+	// function in an object 
+	var foo = {
+		bar: function (para) {
+			function tim(para){
+				function mee(para){
+					console.log(this === para);
+				}
+				mee(para); // can assume as window/global.mee(para),
+			}
+			tim(para);
+		}
+	};
+	foo.bar(undefined); // window/global, 
+
+	// link function to an object property
+	var foo1 = {
+        obj:{
+            func:{}
+        },
+		bar:function (para) {
+			foo1.obj.func = function tim(para){
+				console.log(this === para);
+			}
+			foo1.obj.func(para);  // foo1.obj calls func(para)
+		}
+	};
+    foo1.bar(foo1.obj) // 'this' points to foo1.obj
+
+    var foo2 = {
+        obj:{
+            func:{}
+        },
+		bar:function (para) {
+			function tim(para){
+                foo2.obj.func = function mee(para){
+				    console.log(this === para);
+                }
+                foo2.obj.func(para) // foo2.obj calls func(para)
+			}
+			tim(para); 
+		}
+	};
+    foo2.bar(foo2.obj) // 'this' points to foo2.obj
+
+
+	var foo3 = {
+        obj:{
+            func:{}
+        },
+		bar:function (para) {
+			foo3.obj.func = function tim(para){
+                function mee(para){
+				    console.log(this === para);
+                }
+                mee(para) // can assume as window/global.mee(para),
+			}
+			foo3.obj.func(para); 
+		}
+	};
+	
+    foo3.bar(undefined) // window/global
+	
+    </code>
+</pre>
+
+From <code>fooOrigin_inner()</code> and <code>fooOrigin_inner2()</code> we can see <span class="text-primary">this</span> poins to window/global, 
+so do <code>foo</code>,<code>foo3</code>. In contrast, <span class="text-primary">this</span> refers to <code>foo1.obj</code> and <code>foo2.obj</code>.
+Dmitry Soshnikov explains in Activition Object way; I will conclute upper code in another way.
+The difference between <span class="text-primary">this</span> refering window/global or obj would be 
+<b>what function is directly warpping <span class="text-primary">this</span></b> and <b> who is calling the function</b>.
+
+
+
+
+Talking with function called as constructor, I will combine Dmitry Soshnikov's example and his explanation with my undersding in the code below.
+<pre>
+    <code class="js">
+    "use strict";
+    var x = 10;
+
+    function Something() {
+		console.log(this);
+		console.log(this.x);
+		this.x = 200;
+    }
+    
+    var st = new Something(); // Something, undefined (since x haven't assigned value at Creation Stage), 
+    console.log(st.x); // 200
+
+    Something(); // window/global, 10; if in strict , error ccour
+
+    function SomethingElse(){
+		console.log(this === SomethingElse)
+        console.log(this.__proto__ === SomethingElse.prototype);
+		console.log(this.__proto__.constructor === SomethingElse.prototype.constructor)
+    }
+
+    var ste = new SomethingElse();
+    </code>
+</pre>
+Base on the output, when using <code>new</code> in object creating, <code>new</code> will call the internal construct function
+
