@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link 
+        rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
+        integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" 
+        crossorigin="anonymous">
+    <link 
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" 
+        crossorigin="anonymous">
+    <style>
+        #header {
+            background-color: rgb(118,132,140)
+        }
+        #header span{
+            color:#fff;
+            margin:0.5% 1%;
+        }
+        #header span:first-child{
+            margin-left:2em;
+        }
+        #header imput{
+            position:right;
+        }
+        #app tr td img{
+            border: 0px;
+            border-radius: 100%;
+            height: 2em;
+            width: 2em;
+        }
+    </style>
+    
+</head>
+<body>
+    <div>
+        <div id="header" class="row">
+            <span><i class="fa fa-plus" aria-hidden="true"></i> Create New</span>
+            <span><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</span>
+            <span><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
+            <span><i class="fa fa-cogs" aria-hidden="true"></i> Column Settings <i class="fa fa-angle-down" aria-hidden="true"></i></span>
+            <span><i class="fa fa-table" aria-hidden="true"></i> Table View <i class="fa fa-angle-down" aria-hidden="true"></i></span>
+            <div class="justify-content-end">
+                <input type="text" class="form-control" aria-label="search">
+            </div>  
+        </div>
+        <table id="app" class="table table-striped">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th v-on:click="sortUserName">
+                        <i class="fa " v-bind:class="[userNameUpShow ? faUp : faDown ]" aria-hidden="true" ></i>User Name</th>
+                    <th v-on:click="sortType">                        
+                        <i class="fa fa-caret-up" aria-hidden="true" v-show="typeUpShow"></i>Type</th>
+                    <th v-on:click="sortProfile">                        
+                        <i class="fa fa-caret-up" aria-hidden="true" v-show="profileUpShow"></i>Profile</th>
+                    <th v-on:click="softADMOs">                        
+                        <i class="fa fa-caret-up" aria-hidden="true" v-show="admosUpShow"></i>ADOMs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr is="approad" 
+                    v-for="(td, index) in testData" 
+                    v-bind:uid="index"
+                    v-bind:image="td.image" 
+                    v-bind:username="td.userName"
+                    v-bind:type="td.type" 
+                    v-bind:profile="td.profile"
+                    v-bind:admos="td.admos"></tr>
+            </tbody>
+        </table>
+    <div>
+    <script 
+        src="https://code.jquery.com/jquery-3.1.1.slim.min.js" 
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" 
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" 
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" 
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" 
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" 
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://unpkg.com/vue"></script>
+	<script>
+    Vue.component("approad",{
+        template:`<tr v-bind:id='uid'>
+                    <td><input type='checkbox'></td>
+                    <td><img v-bind:src='image'>{{username}}</td>
+                    <td>{{type}}</td>
+                    <td>{{profile}}</td>
+                    <td>{{admos}}</td>
+                </tr>`,
+        props:["uid","image","username","type","profile","admos"]
+    })
+    var app = new Vue({
+        el:"#app",
+        data:{
+            testData:[
+                {image:"./avatars/1.png",userName:"admin",type:"LOCAL",profile:"Super_User",admos:"All ADOMs"},
+                {image:"./avatars/2.png",userName:"guest",type:"LOCAL",profile:"Ro",admos:"root"},
+                {image:"./avatars/3.png",userName:"linda",type:"LOCAL",profile:"linda",admos:"All ADOMs"},
+                {image:"./avatars/4.png",userName:"test",type:"LOCAL",profile:"test",admos:"All ADOMs"}
+            ],
+            userNameUp:null,
+            typeUp:null,
+            profileUp:null,
+            admosUp:null,
+
+            userNameUpShow:false,
+            typeUpShow:false,
+            profileUpShow:false,
+            admosUpShow:false,
+
+            faUp:"fa-caret-up",
+            faDown:"fa-caret-down"
+        },
+        methods:{
+            sortUserName:function(event){
+                this.testData.sort(function(a,b){
+                    if(this.userNameUp === null){
+                        this.userNameUp = true;
+                        this.userNameUpShow = true;
+                        return a.userName.localeCompare(b.userName)
+                    }
+                    
+                    if(this.userNameUp){
+                        this.userNameUp = false;
+                        this.userNameUpShow = false;
+                        return a.userName.localeCompare(b.userName) 
+         
+                    }else{
+                        this.userNameUp = true;
+                        this.userNameUpShow = true;
+                        return b.userName.localeCompare(a.userName) 
+                    }
+                })
+            },
+            sortType:function(event){
+                this.testData.sort(function(a,b){
+                    if(this.type === null){
+                        this.type = true;
+                        return a.type.localeCompare(b.type)
+                    }
+                    
+                    if(this.type){
+                        this.type = false; 
+                        return a.type.localeCompare(b.type) 
+         
+                    }else{
+                        this.type = true;
+                        return b.type.localeCompare(a.type) 
+                    }
+                })
+            },
+            sortProfile:function(event){
+                this.testData.sort(function(a,b){
+                    if(this.profileUp === null){
+                        this.profileUp = true;
+                        return a.profileUp.localeCompare(b.profileUp)
+                    }
+                    
+                    if(this.profileUp){
+                        this.profileUp = false; 
+                        return a.profileUp.localeCompare(b.profileUp) 
+         
+                    }else{
+                        this.profileUp = true;
+                        return b.profileUp.localeCompare(a.profileUp) 
+                    }
+                })
+            },
+            softADMOs:function(event){
+                this.testData.sort(function(a,b){
+                    if(this.admosUp === null){
+                        this.admosUp = true;
+                        return a.admosUp.localeCompare(b.admosUp)
+                    }
+                    
+                    if(this.admosUp){
+                        this.admosUp = false; 
+                        return a.admosUp.localeCompare(b.admosUp) 
+         
+                    }else{
+                        this.admosUp = true;
+                        return b.admosUp.localeCompare(a.admosUp) 
+                    }
+                })
+            },
+        }
+    })
+
+    var headerFunc = new Vue({
+        el:"#header",
+        methods:{
+            createNewRow: function([newImage,newUserName, newType, newProfile, newADOMs]){
+                app.testData.push({
+                    image:"./avatars/"+newImage,userName:newUserName,type:newType,profile:newProfile,admos:newADOMs
+                });
+            },
+            editRow:function(){
+                
+            }
+        }
+    })
+	</script>
+</body>
+</html>

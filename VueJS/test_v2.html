@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link 
+        rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
+        integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" 
+        crossorigin="anonymous"/>
+    <link 
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" 
+        crossorigin="anonymous"/>
+    <style>
+        #header {
+            background-color: rgb(118,132,140)
+        }
+        #header span{
+            color:#fff;
+            margin:0.5% 1%;
+        }
+        #header span:first-child{
+            margin-left:2em;
+        }
+        #header imput{
+            position:right;
+        }
+        #app_table tr td img{
+            border: 0px;
+            border-radius: 100%;
+            height: 2em;
+            width: 2em;
+        }
+    </style>
+    
+</head>
+<body>
+
+    <div id="app">
+        <div id="header" class="row">
+            <span><i class="fa fa-plus" aria-hidden="true"></i> Create New</span>
+            <span><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</span>
+            <span><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
+            <span><i class="fa fa-cogs" aria-hidden="true"></i> Column Settings <i class="fa fa-angle-down" aria-hidden="true"></i></span>
+            <span><i class="fa fa-table" aria-hidden="true"></i> Table View <i class="fa fa-angle-down" aria-hidden="true"></i></span>
+
+            <form id="search" class="toggler-right">
+                <input type="text" class="form-control" name="query" v-model="searchQuery">
+            </form> 
+        </div>
+        <table id="app_table" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th v-on:click="sortUserName">
+                        <i class="fa " v-bind:class="[userNameUpShow ? faUp : faDown ]" aria-hidden="true" ></i>User Name</th>
+                    <th v-on:click="sortType">                        
+                        <i class="fa fa-caret-up" aria-hidden="true" v-show="typeUpShow"></i>Type</th>
+                    <th v-on:click="sortProfile">                        
+                        <i class="fa fa-caret-up" aria-hidden="true" v-show="profileUpShow"></i>Profile</th>
+                    <th v-on:click="softADMOs">                        
+                        <i class="fa fa-caret-up" aria-hidden="true" v-show="admosUpShow"></i>ADOMs</th>
+                </tr>
+            </thead>
+            <apptablebody></apptablebody>
+        </table>
+    </div>
+    <script type="text/x-template" id="tablebody">
+        <tbody
+            v-bind:filterKey="searchQuery">
+            <tr v-bind:id='uid' v-for="">
+                <td><input type='checkbox'></td>
+                <td><img v-bind:src='image'>{{td.username}}</td>
+                <td>{{td.type}}</td>
+                <td>{{td.profile}}</td>
+                <td>{{td.admos}}</td>
+            </tr>
+        </tbody>
+    </script>
+
+    <script 
+        src="https://code.jquery.com/jquery-3.1.1.slim.min.js" 
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" 
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" 
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" 
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" 
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" 
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://unpkg.com/vue"></script>
+	<script>
+    Vue.component("apptablebody",{
+        template:"#tablebody",
+        props:["filterKey","uid","image","username","type","profile","admos"],
+    })
+
+    var app = new Vue({
+        el:"#app",
+        data:{
+            testData:[
+                {image:"./avatars/1.png",userName:"admin",type:"LOCAL",profile:"Super_User",admos:"All ADOMs"},
+                {image:"./avatars/2.png",userName:"guest",type:"LOCAL",profile:"Ro",admos:"root"},
+                {image:"./avatars/3.png",userName:"linda",type:"LOCAL",profile:"linda",admos:"All ADOMs"},
+                {image:"./avatars/4.png",userName:"test",type:"LOCAL",profile:"test",admos:"All ADOMs"}
+            ],
+            userNameUp:null,
+            typeUp:null,
+            profileUp:null,
+            admosUp:null,
+
+            userNameUpShow:false,
+            typeUpShow:false,
+            profileUpShow:false,
+            admosUpShow:false,
+
+            faUp:"fa-caret-up",
+            faDown:"fa-caret-down",
+
+            searchQuery:""
+        },
+        methods:{
+            sortUserName:function(event){
+                this.testData.sort(function(a,b){
+                    if(this.userNameUp === null){
+                        this.userNameUp = true;
+                        this.userNameUpShow = true;
+                        return a.userName.localeCompare(b.userName)
+                    }
+                    
+                    if(this.userNameUp){
+                        this.userNameUp = false;
+                        this.userNameUpShow = false;
+                        return a.userName.localeCompare(b.userName) 
+         
+                    }else{
+                        this.userNameUp = true;
+                        this.userNameUpShow = true;
+                        return b.userName.localeCompare(a.userName) 
+                    }
+                })
+            },
+            sortType:function(event){
+                this.testData.sort(function(a,b){
+                    if(this.type === null){
+                        this.type = true;
+                        return a.type.localeCompare(b.type)
+                    }
+                    
+                    if(this.type){
+                        this.type = false; 
+                        return a.type.localeCompare(b.type) 
+         
+                    }else{
+                        this.type = true;
+                        return b.type.localeCompare(a.type) 
+                    }
+                })
+            },
+            sortProfile:function(event){
+                this.testData.sort(function(a,b){
+                    if(this.profileUp === null){
+                        this.profileUp = true;
+                        return a.profileUp.localeCompare(b.profileUp)
+                    }
+                    
+                    if(this.profileUp){
+                        this.profileUp = false; 
+                        return a.profileUp.localeCompare(b.profileUp) 
+         
+                    }else{
+                        this.profileUp = true;
+                        return b.profileUp.localeCompare(a.profileUp) 
+                    }
+                })
+            },
+            softADMOs:function(event){
+                this.testData.sort(function(a,b){
+                    if(this.admosUp === null){
+                        this.admosUp = true;
+                        return a.admosUp.localeCompare(b.admosUp)
+                    }
+                    
+                    if(this.admosUp){
+                        this.admosUp = false; 
+                        return a.admosUp.localeCompare(b.admosUp) 
+         
+                    }else{
+                        this.admosUp = true;
+                        return b.admosUp.localeCompare(a.admosUp) 
+                    }
+                })
+            },
+        },
+        computed:{
+            filteredData:function(){
+                //var sortKey = this.sortKey
+                var filterKey = this.filterKey && this.filterKey.toLowerCase()
+                //var order = this.sortOrders[sortKey] || 1
+                var data = this.testData
+                if(filterKey){
+                    data = data.filter(function(row){
+                        console.log(row)
+                        return Object.keys(row).some(function(key){
+                            return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+                        })
+                    })
+                }/*
+                if(sortKey){
+                    data = data.slice().sort(function(a, b){
+                        a = a[sortKey]
+                        b = b[sortKey]
+                        return (a === b ? 0 : a > b ? 1 : -1) * order
+                    })
+                }*/
+                return data
+            }
+        },
+    })
+/*
+    var headerFunc = new Vue({
+        el:"#header",
+        methods:{
+            createNewRow: function([newImage,newUserName, newType, newProfile, newADOMs]){
+                app.testData.push({
+                    image:"./avatars/"+newImage,userName:newUserName,type:newType,profile:newProfile,admos:newADOMs
+                });
+            },
+            editRow:function(){
+                
+            }
+        }
+    })*/
+	</script>
+</body>
+</html>

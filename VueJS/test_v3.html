@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link 
+        rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
+        integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" 
+        crossorigin="anonymous"/>
+    <link 
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" 
+        crossorigin="anonymous"/>
+    <style>
+        #header {
+            background-color: rgb(118,132,140);
+            padding-left:1.2em;
+        }
+        #header imput{
+            position:right;
+        }
+        #app tr td img{
+            border: 0px;
+            border-radius: 100%;
+            height: 2.2em;
+            width: 2.2em;
+        }
+        #search{
+            margin:0 1em;
+        }
+        #search input{
+            height:100%;
+            padding-right:2.2em;
+        }
+        #search:before{
+            content: "\f002"; 
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: inherit;
+            position: absolute;
+            font-size: 28px;
+            color: rgb(118,132,140);
+            top:-0.09em;
+            right:0.8em;
+            z-index: 1;
+        }
+        .navButton{
+            cursor:pointer;
+            color:#fff;
+            margin:0.5% 1%;
+        }
+        .navButtonDisable{
+            cursor: not-allowed;
+            color:rgb(206,211,214);
+            margin:0.5% 1%;
+        }
+        .tableHeader{
+            cursor:pointer;
+        }
+        .table thead{
+            background-color:rgb(210,212,214);
+        }
+        .testUnselectable{
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .dropdown-menu{
+            background-color:rgb(118,132,140);
+        }
+        .dropdown-item{
+            color: #fff
+        }
+        .dropdown-item:hover{
+            background-color:rgb(146, 159, 168);
+            color:#fff;
+        }
+        .dropdown-item:active{
+            background-color:#fff;
+            color:rgb(118,132,140);
+        }
+        .dropdown-toggle::after{
+            border: 0; 
+        }
+        .modal-mask {
+            position: fixed;
+            z-index: 9998;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .5);
+            display: table;
+            transition: opacity .3s ease;
+        }
+        .modal-wrapper {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .modal-container {
+            width: 50%;
+            margin: 0px auto;
+            padding: 20px 30px;
+            background-color: #fff;
+            border-radius: 2px;
+            transition: all .3s ease;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        .modal-header{
+            text-align: -webkit-center;
+            margin: auto;
+            display: block;
+            color:rgb(146, 159, 168);
+        }
+        .selectAllStyle{
+            background: black;
+            border-radius: 20%;
+            width: 17px;
+            height: 17px;
+            
+        }
+        .selectAllStyle input{
+            position: relative;
+            top: 25%;
+            left: 0;
+            transform: translate(20%,-50%);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="header" class="d-flex justify-content-start">
+            <span class="navButton testUnselectable" v-on:click="createUser"><i class="fa fa-plus" aria-hidden="true"></i> Create New</span>
+            <span class="testUnselectable" v-bind:class="[editButtonActive ? navButton : navButtonDisable]" v-on:click="editUser">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+            </span>
+            <span class="testUnselectable" v-bind:class="[deleteButtonActive ? navButton : navButtonDisable]" v-on:click="deleteUser">
+                <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+            </span>
+            <div class="dropdown navButton testUnselectable">
+                <span class="dropdown-toggle" data-toggle="dropdown" id="columnSettingButton" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-cogs" aria-hidden="true"></i> Column Settings <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </span>
+                <div class="dropdown-menu" aria-labelledby="columnSettingButton">
+                    <a class="dropdown-item" href="#">Place Holder</a>
+                    <a class="dropdown-item" href="#">Place Holder</a>
+                </div>
+            </div>
+            <div class="dropdown navButton testUnselectable">
+                <span class="dropdown-toggle" data-toggle="dropdown" id="tableViewButton" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-table" aria-hidden="true"></i> Table View <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </span>
+                <div class="dropdown-menu" aria-labelledby="tableViewButton">
+                    <a class="dropdown-item" href="#">Place Holder</a>
+                    <a class="dropdown-item" href="#">Place Holder</a>
+                </div>
+            </div>
+            <form id="search" class="ml-auto">
+                <input type="text" class="form-control" name="query" v-model="filterKey">
+            </form> 
+        </div>
+        <table class="table table-striped table-bordered">
+            <thead >
+                <tr>
+                    <th><div class="selectAllStyle"><input type="checkbox" v-model="selectAll"></div></th>
+                    <th class="tableHeader testUnselectable" v-for="tdn in testDataName" v-on:click="sorting(tdn.key)">
+                        <i class="fa " v-bind:class="[sortOrders[tdn.key] != 0 ? (sortOrders[tdn.key] > 0 ? sortClassUp : sortClassDown) : '' ]" aria-hidden="true" ></i>{{tdn.value}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="">
+                <tr v-bind:id='td.uid' v-for="td in filteredData">
+                    <td><input type='checkbox' v-model="selected" v-bind:value="td.uid"></td>
+                    <td><img v-bind:src='defaultImageDir + td.uid + ".jpg"' onerror="this.src='./avatars/default.jpg'">{{td.username}}</td>
+                    <td>{{td.type}}</td>
+                    <td>{{td.profile}}</td>
+                    <td>{{td.admos}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="modal-mask"  v-if="showModal">
+            <div class="modal-wrapper">
+                <div class="modal-container">
+                    <h2 class="modal-header">{{modalFor}}</h2>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-3 col-form-label">User Name</label>
+                        <div class="col-9">
+                            <input class="form-control" type="text" v-model="tempUserData.username" id="example-text-input">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-3 col-form-label">Type</label>
+                        <div class="col-9">
+                            <input class="form-control" type="text" v-model="tempUserData.type" id="example-text-input">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-3 col-form-label">Profile</label>
+                        <div class="col-9">
+                            <input class="form-control" type="text" v-model="tempUserData.profile" id="example-text-input">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-3 col-form-label">ADMOs</label>
+                        <div class="col-9">
+                            <input class="form-control" type="text" v-model="tempUserData.admos" id="example-text-input">
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" v-on:click="showModal=false">Cancel</button>
+                        <button type="button" class="btn btn-success" v-on:click="closeShowModal">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script 
+        src="https://code.jquery.com/jquery-3.1.1.slim.min.js" 
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" 
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" 
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" 
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" 
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" 
+        crossorigin="anonymous"></script>
+    <script 
+        src="https://unpkg.com/vue"></script>
+	<script>
+
+    var app = new Vue({
+        el:"#app",
+        data:{
+            testDataName:[
+                {key:"username",value:"User Name"},
+                {key:"type",value:"Type"},
+                {key:"profile",value:"Profile"},
+                {key:"admos",value:"ADOMs"}
+            ],
+            testData:[
+                {uid:111,username:"admin",type:"LOCAL",profile:"Super_User",admos:"All ADOMs"},
+                {uid:222,username:"guest",type:"LOCAL",profile:"Ro",admos:"root"},
+                {uid:333,username:"linda",type:"LOCAL",profile:"linda",admos:"All ADOMs"},
+                {uid:444,username:"test",type:"LOCAL",profile:"test",admos:"All ADOMs"}
+            ],
+            selected:[],
+            nextUid:555,
+            defaultImageDir:"./avatars/",
+
+            navButton:"navButton",
+            navButtonDisable:"navButtonDisable",
+
+            filterKey:"",
+            sortKey:"",
+            sortOrders:{},
+            sortClassUp: "fa-caret-up",
+            sortClassDown: "fa-caret-down",  
+
+            sortChangeTriger:1,
+            showModal:false,
+            modalFor:"",
+            modalEditUid:0,
+
+            tempUserData:{
+                username:"",
+                type:"",
+                profile:"",
+                admos:""
+            }
+        },
+        created:function(){
+            var sortOrders = this.sortOrders
+            this.testDataName.forEach(function(name) {
+                sortOrders[name.key]=0;
+            });
+        },
+        computed:{
+            filteredData: function () {
+                var filterKey = this.filterKey && this.filterKey.toLowerCase();
+                var filterData = this.testData;
+                var sortKey = this.sortKey;
+                var sortOrder = this.sortOrders[sortKey];
+                var change = this.sortChangeTriger;
+
+                if (filterKey) {
+                    filterData = filterData.filter(function (row) {
+                        return Object.keys(row).some(function (key) {
+                            return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+                        })
+                    })
+                }
+                if(sortKey){
+                    filterData = filterData.sort(function(a,b){
+                        a = a[sortKey];
+                        b = b[sortKey];
+                        return (a === b ? 0 : a > b ? 1 : -1) * sortOrder;
+                    })
+                }
+                return filterData
+            },
+            selectAll:{
+                get:function(){
+                    if(this.testData.length === 0){
+                        return false;
+                    }
+                    return this.testData ? this.selected.length == this.testData.length : false;
+                },
+                set:function(value){
+                    var selected = [];
+                    if(value){
+                        this.testData.forEach(function(user){
+                            selected.push(user.uid);
+                        })
+                    }
+                    this.selected = selected;
+                }
+            },
+            editButtonActive:function(){
+                if(this.selected.length === 1){
+                    return true;
+                }else{
+                    return false;
+                }
+            },
+            deleteButtonActive:function(){
+                if(this.selected.length){
+                    return true;
+                }else{
+                    return false;
+                }
+            },
+        },
+        methods:{
+            sorting:function(key){
+                this.sortKey = key;
+                for(var item in this.sortOrders){
+                    if(key != item){
+                        this.sortOrders[item]=0;
+                    }
+                }
+
+                if(this.sortOrders[key] == 0){
+                    this.sortOrders[key] = 1;
+                }
+
+                this.sortOrders[key] = this.sortOrders[key] * -1;
+                this.sortChangeTriger = this.sortChangeTriger * -1;
+            },
+            createUser:function(){
+                var tempUserData = this.tempUserData;
+                tempUserData.username = "";
+                tempUserData.type = "";
+                tempUserData.profile = "";
+                tempUserData.admos = "";
+
+                this.modalFor = "Create User";
+                this.showModal = true;
+            },
+            editUser:function(){
+                if(this.selected.length !== 1){return;}
+
+                var testData = this.testData;
+                var selectedUid = this.selected[0];
+                var tempUserData = this.tempUserData;
+
+
+                var userData = testData.filter(function(item){
+                    return selectedUid === item.uid;
+                })[0];
+
+                tempUserData.username = userData.username;
+                tempUserData.type = userData.type;
+                tempUserData.profile = userData.profile;
+                tempUserData.admos = userData.admos;
+
+                this.modalEditUid = userData.uid;
+                this.modalFor = "Edit User";
+                this.showModal = true;
+            },
+            deleteUser:function(){
+                var testData = this.testData;
+                var selected = this.selected;
+
+                if(selected.length === 0){
+
+                }else if(selected.length === testData.length){
+                    this.testData = [];
+                    this.selected = [];
+                }else{
+					selected.forEach(function(uid){
+                    	testData = testData.filter(function(item) {
+							return uid !== item.uid;
+						})
+                    });
+                    this.testData = testData
+                    this.selected = [];
+                }
+            },
+            closeShowModal:function(){
+                this.showModal = false;
+
+                var testData = this.testData;
+                var tempUserData = this.tempUserData;
+                var nextUid = this.nextUid;
+
+                if(this.modalFor === "Create User"){
+                    testData.push({
+                        uid:nextUid,
+                        username:tempUserData.username,
+                        type:tempUserData.type,
+                        profile:tempUserData.profile,
+                        admos:tempUserData.admos
+                    })
+                    this.nextUid += 111;
+                }else if(this.modalFor==="Edit User"){
+                    var modalEditUid = this.modalEditUid;
+                    var newTestData = testData.filter(function(item){
+                        return modalEditUid !== item.uid;
+                    });
+
+                    newTestData.push({
+                        uid:modalEditUid,
+                        username:tempUserData.username,
+                        type:tempUserData.type,
+                        profile:tempUserData.profile,
+                        admos:tempUserData.admos
+                    })
+                    this.testData = newTestData;
+                }else{ }
+                tempUserData.username = "";
+                tempUserData.type = "";
+                tempUserData.profile = "";
+                tempUserData.admos = "";
+            }
+        }
+    })
+	</script>
+</body>
+</html>
